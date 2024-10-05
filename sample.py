@@ -8,8 +8,6 @@ class Sample:
     n = 0
     full_sample = []
 
-    fig, ax = [], []
-
     def __init__(self, sample, ni=None):
         if ni is None:
             self.ni = [1 for _ in range(len(sample))]
@@ -19,12 +17,12 @@ class Sample:
         self.sample = sample
         self.n = sum(self.ni)
 
-        self.fig, self.ax = plt.subplots(1, 3)
-
     def info(self):
-        self.hist()
-        self.cumulative_plot()
-        self.cdf_plot()
+        fig, ax = plt.subplots(1, 3, figsize=(15, 5))
+
+        self.hist(ax[0])
+        self.cumulative_plot(ax[1])
+        self.cdf_plot(ax[2])
 
         mean = self.mean()
         median = self.median()
@@ -53,17 +51,20 @@ class Sample:
 
         plt.show()
 
-    def hist(self):
-        return self.ax[0].bar(self.sample, self.ni)
+    def hist(self, ax):
+        ax.bar(self.sample, self.ni)
+        ax.set_title('Histogram')
 
-    def cumulative_plot(self):
-        n_cum = self.n_cumulative()
-        return self.ax[1].plot(self.sample, n_cum)
+    def cumulative_plot(self, ax):
+        n_cm = self.n_cumulative()
+        ax.plot(self.sample, n_cm)
+        ax.set_title('Cumulative Plot')
 
-    def cdf_plot(self):
+    def cdf_plot(self, ax):
         n_cm = self.n_cumulative()
         cdf = self.cdf()
-        return self.ax[2].plot(n_cm, cdf)
+        ax.plot(n_cm, cdf)
+        ax.set_title('CDF Plot')
 
     def n_cumulative(self):
         n_cm = [0 for _ in range(len(self.ni))]
